@@ -29,7 +29,7 @@ var (
 			Env:       "METRIC_NAME_TEMPLATE",
 			Argument:  "metric-name-template",
 			Shorthand: "t",
-			Default:   "check_status",
+			Default:   "{{.Check.Name}}.status",
 			Usage:     "Template for naming the metric point for the check status",
 			Value:     &mutatorConfig.MetricNameTemplate,
 		},
@@ -57,7 +57,7 @@ func executeMutator(event *types.Event) (*types.Event, error) {
 		return &types.Event{}, fmt.Errorf("Failed to evalutate template: %v", err)
 	}
 
-	// Possible TODO:  replace any spaces and/or periods from the templated metricName
+	// Possible TODO:  replace any spaces periods from the templated metricName
 
 	// This really shouldn't happen if a metrics handler is defined, but just in case.
 	if !event.HasMetrics() {
@@ -66,7 +66,7 @@ func executeMutator(event *types.Event) (*types.Event, error) {
 	mp := &types.MetricPoint{
 		Name:      metricName,
 		Value:     float64(event.Check.Status),
-		Timestamp: event.Check.Executed,
+		Timestamp: event.Timestamp,
 	}
 	event.Metrics.Points = append(event.Metrics.Points, mp)
 	return event, nil

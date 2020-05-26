@@ -34,7 +34,7 @@ Available Commands:
 
 Flags:
   -h, --help                          help for sensu-check-status-metric-mutator
-  -t, --metric-name-template string   Template for naming the metric point for the check status (default "check_status")
+  -t, --metric-name-template string   Template for naming the metric point for the check status (default "{{.Check.Name}}.status")
 
 Use "sensu-check-status-metric-mutator [command] --help" for more information about a command.
 ```
@@ -50,7 +50,7 @@ the template to use for naming the metric point.
     ],
     "points": [
       {
-        "name": "check_status",
+        "name": "check_cpu.status",
         "value": 0,
         "timestamp": 1590369892,
         "tags": null
