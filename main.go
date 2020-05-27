@@ -61,12 +61,22 @@ func executeMutator(event *types.Event) (*types.Event, error) {
 
 	// This really shouldn't happen if a metrics handler is defined, but just in case.
 	if !event.HasMetrics() {
-		event.Metrics = &types.Metrics{}
+		event.Metrics = new(types.Metrics)
 	}
+
+	// Provide some extra information in the tags
+	mt := make([]*types.MetricTag, 0)
+	mt = append(mt, &types.MetricTag{Name: "entity", Value: event.Entity.Name})
+	mt = append(mt, &types.MetricTag{Name: "check", Value: event.Check.Name})
+	mt = append(mt, &types.MetricTag{Name: "state", Value: event.Check.State})
+	mt = append(mt, &types.MetricTag{Name: "occurrences", Value: fmt.Sprintf("%d", event.Check.Occurrences)})
+	mt = append(mt, &types.MetricTag{Name: "occurrences_watermark", Value: fmt.Sprintf("%d", event.Check.OccurrencesWatermark)})
+
 	mp := &types.MetricPoint{
 		Name:      metricName,
 		Value:     float64(event.Check.Status),
 		Timestamp: event.Timestamp,
+		Tags:      mt,
 	}
 	event.Metrics.Points = append(event.Metrics.Points, mp)
 	return event, nil
