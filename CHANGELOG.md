@@ -7,6 +7,8 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
+## [0.2.0] - 2020-05-27
+
 ### Added
 - Added tags to the check status metric point
 
