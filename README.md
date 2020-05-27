@@ -53,7 +53,27 @@ the template to use for naming the metric point.
         "name": "check_cpu.status",
         "value": 0,
         "timestamp": 1590369892,
-        "tags": null
+        "tags": [
+          {
+            "name": "entity",
+            "value": "entity1"
+          },
+          {
+            "name": "check",
+            "value": "check_cpu"
+          },
+          {
+            "name": "state",
+            "value": "passing"
+          },
+          {
+            "name": "occurrences",
+            "value": "2958"
+          },
+          {
+            "name": "occurrences_watermark",
+            "value": "2958"
+
       }
     ]
 ```

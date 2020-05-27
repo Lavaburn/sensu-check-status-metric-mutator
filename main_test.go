@@ -40,7 +40,7 @@ func TestExecuteMutator(t *testing.T) {
 	}
 	assert.Contains(mps, "answer")
 	assert.Contains(mps, "check_name")
-	
+
 	// Event without check
 	event.Check = nil
 	_, err = executeMutator(event)
