@@ -107,7 +107,7 @@ spec:
   - nixwiz/sensu-check-status-metric-mutator
 ```
 
-This mutator would then be referenced by your metrics hqndler definition.
+This mutator would then be referenced by your metrics handler definition.
 
 ```yml
 ---
