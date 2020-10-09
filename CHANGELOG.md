@@ -7,6 +7,8 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
+## [0.3.0] - 2020-10-09
+
 ### Changed
 - Fixed typo in README
 - Updated dependencies to fix check runtime asset validation failure
