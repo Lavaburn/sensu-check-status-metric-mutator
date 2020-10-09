@@ -9,6 +9,7 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 ### Changed
 - Fixed typo in README
+- Updated dependencies to fix check runtime asset validation failure
 
 ## [0.2.1] - 2020-05-27
 
