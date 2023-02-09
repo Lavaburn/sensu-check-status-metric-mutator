@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-
+	"strings"
+	
 	"github.com/sensu-community/sensu-plugin-sdk/sensu"
 	"github.com/sensu-community/sensu-plugin-sdk/templates"
 	"github.com/sensu/sensu-go/types"
@@ -24,6 +25,9 @@ type Config struct {
 	ShowOccurrencesAsMetric string
 	ShowOccurrencesAsTag string
 	EnableWatermark string
+	
+	ShowLabels string
+	ShowAnnotations string
 }
 
 var (
@@ -117,6 +121,24 @@ var (
 			Usage:     "The tag name that contains the occurrences name",
 			Value:     &mutatorConfig.EnableWatermark,
 		},
+		{
+			Path:      "labels",
+			Env:       "SENSU_LABELS",
+			Argument:  "labels",
+			Shorthand: "l",
+			Default:   "",
+			Usage:     "Add these Sensu labels as a metric tag (comma-separated)",
+			Value:     &mutatorConfig.ShowLabels,
+		},
+		{
+			Path:      "annotations",
+			Env:       "SENSU_ANNOTATIONS",
+			Argument:  "annotations",
+			Shorthand: "a",
+			Default:   "",
+			Usage:     "Add these Sensu annotations as a metric tag (comma-separated)",
+			Value:     &mutatorConfig.ShowAnnotations,
+		},
 	}
 )
 
@@ -155,7 +177,7 @@ func checkArgs(_ *types.Event) error {
 	if mutatorConfig.EnableWatermark != "true" && mutatorConfig.EnableWatermark != "false" {
 		return fmt.Errorf("--EnableWatermark or ENABLE_WATERMARK environment variable is required and should be -true- or -false-")
 	}
-	
+		
 	return nil
 }
 
@@ -188,6 +210,48 @@ func executeMutator(event *types.Event) (*types.Event, error) {
 	mt = append(mt, &types.MetricTag{Name: mutatorConfig.TagNameEntity, Value: event.Entity.Name})
 	mt = append(mt, &types.MetricTag{Name: mutatorConfig.TagNameCheck, Value: event.Check.Name})
 	mt = append(mt, &types.MetricTag{Name: mutatorConfig.TagNameState, Value: event.Check.State})
+	
+	if mutatorConfig.ShowLabels != "" {
+		addLabels := strings.Split(mutatorConfig.ShowLabels, ",")
+		for _, k1 := range addLabels {
+			value := ""
+			for k2, v := range event.Entity.Labels {
+				if k1 == k2 {
+					value = v
+				}
+			}
+			for k2, v := range event.Check.Labels {
+				if k1 == k2 {
+					value = v
+				}
+			}
+		
+			if value != "" {
+				mt = append(mt, &types.MetricTag{Name: k1, Value: value})	
+			}
+		}
+	}
+	
+	if mutatorConfig.ShowAnnotations != "" {
+		addAnnotations := strings.Split(mutatorConfig.ShowAnnotations, ",")
+		for _, k1 := range addAnnotations {
+			value := ""
+			for k2, v := range event.Entity.Annotations {
+				if k1 == k2 {
+					value = v
+				}
+			}
+			for k2, v := range event.Check.Annotations {
+				if k1 == k2 {
+					value = v
+				}
+			}
+		
+			if value != "" {
+				mt = append(mt, &types.MetricTag{Name: k1, Value: value})	
+			}
+		}
+	}
 	
 	if mutatorConfig.ShowOccurrencesAsTag == "true" {
 		mt = append(mt, &types.MetricTag{Name: mutatorConfig.TagNameOccurrences, Value: fmt.Sprintf("%d", event.Check.Occurrences)})
