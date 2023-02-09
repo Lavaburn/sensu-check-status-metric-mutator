@@ -1,4 +1,4 @@
-module nixwiz/sensu-check-status-metric-mutator
+module Lavaburn/sensu-check-status-metric-mutator
 
 go 1.14
 

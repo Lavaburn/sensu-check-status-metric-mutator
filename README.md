@@ -1,6 +1,6 @@
-[![Sensu Bonsai Asset](https://img.shields.io/badge/Bonsai-Download%20Me-brightgreen.svg?colorB=89C967&logo=sensu)](https://bonsai.sensu.io/assets/nixwiz/sensu-check-status-metric-mutator)
-![Go Test](https://github.com/nixwiz/sensu-check-status-metric-mutator/workflows/Go%20Test/badge.svg)
-![goreleaser](https://github.com/nixwiz/sensu-check-status-metric-mutator/workflows/goreleaser/badge.svg)
+[![Sensu Bonsai Asset](https://img.shields.io/badge/Bonsai-Download%20Me-brightgreen.svg?colorB=89C967&logo=sensu)](https://bonsai.sensu.io/assets/Lavaburn/sensu-check-status-metric-mutator)
+![Go Test](https://github.com/Lavaburn/sensu-check-status-metric-mutator/workflows/Go%20Test/badge.svg)
+![goreleaser](https://github.com/Lavaburn/sensu-check-status-metric-mutator/workflows/goreleaser/badge.svg)
 
 # Sensu Check Status Metric Mutator
 
@@ -87,7 +87,7 @@ consider doing so! If you're using sensuctl 5.13 with Sensu Backend 5.13 or late
 following command to add the asset:
 
 ```
-sensuctl asset add nixwiz/sensu-check-status-metric-mutator
+sensuctl asset add Lavaburn/sensu-check-status-metric-mutator
 ```
 
 If you're using an earlier version of sensuctl, you can find the asset on the [Bonsai Asset Index][3]
@@ -104,7 +104,7 @@ metadata:
 spec:
   command: sensu-check-status-metric-mutator
   runtime_assets:
-  - nixwiz/sensu-check-status-metric-mutator
+  - Lavaburn/sensu-check-status-metric-mutator
 ```
 
 This mutator would then be referenced by your metrics handler definition.
@@ -148,13 +148,43 @@ From the local path of the sensu-check-status-metric-mutator repository:
 go build
 ```
 
+## 0.4.0 - Forked from nixwiz
+
+This version adds many flags to customize the metrics output.
+
+I wanted to use this for outputting all check results to Prometheus Push Gateway.
+
+* The -occurrences- as a tag (Prometheus label) creates a new series in Prometheus on every push/scrape. It makes a lot more sense to add this data as a separate metric.
+* Push Gateway groups metrics over specific labels, hence I wanted the option to have specific tag (label) names.
+* For this project I also forked sensu-prometheus-pushgateway-handler, as I only wanted a single metric with labels for entity and check name.
+* To enable backwards-compatibility, I used arguments which can be set to "true" or "false" instead of using bools (flags).
+
+```
+Flags:
+  -h, --help                                      help for sensu-check-status-metric-mutator
+
+  -t, --metric-name-template string               Template for naming the metric point for the check status (default "{{.Check.Name}}.status")
+
+  -c, --tag-name-check string                     The tag name that contains the check name (default "check")
+  -e, --tag-name-entity string                    The tag name that contains the entity name (default "entity")
+  -s, --tag-name-state string                     The tag name that contains the state name (default "state")
+
+  -m, --show-occurrences-as-metric string         Whether to add a metric for Occurrences (default "false")
+  -u, --metric-name-template-occurrences string   Template for naming the metric point for the check status (default "{{.Check.Name}}.occurrences")
+
+  -r, --show-occurrences-as-tag string            Whether to add a tag for Occurrences (default "true")
+  -o, --tag-name-occurrences string               The tag name that contains the occurrences name (default "occurrences")
+
+  -w, --enable-watermark string                   The tag name that contains the occurrences name (default "true")
+```
+
 ## Contributing
 
 For more information about contributing to this plugin, see [Contributing][1].
 
 [1]: https://github.com/sensu/sensu-go/blob/master/CONTRIBUTING.md
 [2]: https://docs.sensu.io/sensu-go/latest/reference/mutators/
-[3]: https://bonsai.sensu.io/assets/nixwiz/sensu-check-status-metric-mutator
+[3]: https://bonsai.sensu.io/assets/Lavaburn/sensu-check-status-metric-mutator
 [9]: https://github.com/sensu-community/sensu-plugin-tool
 [5]: https://docs.sensu.io/sensu-go/latest/reference/assets/
 [6]: https://docs.sensu.io/sensu-go/latest/reference/checks/#check-result-specification

@@ -7,6 +7,15 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 
+## [0.4.0] - 2023-02-09
+
+Flags added to:
+- Add occurrences as a separate metric instead of tag (avoids explosion of metrics in Prometheus)
+- Make occurrences_watermark optional (in both scenarios)
+- Change the tag names (useful when handler expects specific tags)
+
+This release is backwards-compatible with nixwiz 0.3.0
+
 ## [0.3.0] - 2020-10-09
 
 ### Changed

@@ -6,11 +6,23 @@ import (
 	"testing"
 )
 
+func configureDefaultArgs() {
+	mutatorConfig.MetricNameTemplate = "check_name"
+	mutatorConfig.MetricNameTemplateOccurrences = "check_name_occurrences"
+	mutatorConfig.TagNameEntity = "entity"
+	mutatorConfig.TagNameCheck = "check"
+	mutatorConfig.TagNameState = "state"
+	mutatorConfig.TagNameOccurrences = "occurrences"
+	mutatorConfig.ShowOccurrencesAsMetric = "false"
+	mutatorConfig.ShowOccurrencesAsTag = "true"
+	mutatorConfig.EnableWatermark = "true"
+}
+
 func TestCheckArgs(t *testing.T) {
 	assert := assert.New(t)
 	event := types.FixtureEvent("entity1", "check1")
 	assert.Error(checkArgs(event))
-	mutatorConfig.MetricNameTemplate = "check_name"
+	configureDefaultArgs()
 	assert.NoError(checkArgs(event))
 }
 
@@ -19,7 +31,7 @@ func TestExecuteMutator(t *testing.T) {
 
 	// Event with no metrics
 	event := types.FixtureEvent("entity1", "check1")
-	mutatorConfig.MetricNameTemplate = "check_name"
+	configureDefaultArgs()
 	ev, err := executeMutator(event)
 	assert.NoError(err)
 	assert.Equal(len(ev.Metrics.Points), 1)
